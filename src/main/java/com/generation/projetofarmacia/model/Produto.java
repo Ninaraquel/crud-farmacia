@@ -3,13 +3,15 @@ package com.generation.projetofarmacia.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "tb_categoria")
-public class Categoria {
+@Table(name = "tb_produto")
+public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +21,13 @@ public class Categoria {
     @Size(min = 5, max = 100, message = "O atributo nome deve conter no mínimo 5 e no máximo 100 caracteres!")
     private String nome;
 
-    @NotBlank(message = "O atributo Descricao é Obrigatório!")
-    @Size(min = 10, max = 1000, message = "O atributo Descricao deve conter no mínimo 10 e no máximo 1000 caracteres!")
-    private String descricao;
+    @NotNull(message = "O preço não pode ser nulo. Por favor, informe um valor.")
+    @Positive(message = "O preco deve ser maior que zero!")
+    private BigDecimal preco;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria", cascade = CascadeType.REMOVE)
-    @JsonIgnoreProperties("categoria")
-    private List<Produto> produtos;
+    @ManyToOne
+    @JsonIgnoreProperties("produto")
+    private Categoria categoria;
 
 
     public Long getId() {
@@ -44,19 +46,19 @@ public class Categoria {
         this.nome = nome;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public BigDecimal getPreco() {
+        return preco;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
     }
 
-    public List<Produto> getProdutos() {
-        return produtos;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 }
